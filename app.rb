@@ -3,7 +3,7 @@ require 'sinatra/reloader'
 
 get '/' do
   @title = "メモアプリ"
-  @content = "たくさんメモしようぜ！"
+  @content = "たくさんメモしよう！"
   erb :index
 end
 
