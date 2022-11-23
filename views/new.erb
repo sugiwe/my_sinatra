@@ -1,6 +1,7 @@
 <p>新規作成</p>
-<form></form>
-<input type="text" name="title"></input>
-<input type="text" name="content"></input>
-<button type="submit" onclick="location.href='/detail'">保存</button>
 
+<form method="post" action="/detail">
+  <input type="text" name="memo_title"><br/>
+  <textarea name="memo_text"></textarea><br/>
+  <input type="submit" value="送信">
+</form>
