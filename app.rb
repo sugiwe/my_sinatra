@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
+require 'securerandom'
 
 get '/' do
   @title = "メモアプリ"
@@ -21,9 +22,10 @@ end
 post '/detail' do
   @memo_title = params[:memo_title]
   @memo_text = params[:memo_text]
+  @id = SecureRandom.uuid # メモにユニークなIDを付ける
 
   hash = File.open("json/db.json") { |f| JSON.load(f) } # JSONファイル内のJSONオブジェクトをRubyオブジェクトに変換してhashという変数に入れる
-  hash["memos"] << {"id" => 12345, "title" => @memo_title, "body" => @memo_text} # JSONの方で設定していたmemosという配列に要素を追加
+  hash["memos"] << {"id" => @id, "title" => @memo_title, "body" => @memo_text} # JSONの方で設定していたmemosという配列に要素を追加
   File.open("json/db.json", "w") { |f| JSON.dump(hash, f) } # 更新したhashをJSONオブジェクトに変換してJSONファイルに上書きする
 
   @title = "#{@memo_title} | メモアプリ" #HTMLのTitleタグ
