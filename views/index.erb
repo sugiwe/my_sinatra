@@ -5,3 +5,8 @@
 <br/>
 <br/>
 
+<ul>
+<% @memo_titles.zip(@memo_ids) do |title, id| %>
+  <li><a href='/detail/<%= id %>'><%= title %></a></li>
+<% end %>
+</ul>

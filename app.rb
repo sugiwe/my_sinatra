@@ -4,6 +4,11 @@ require 'json'
 require 'securerandom'
 
 get '/' do
+  @hash = File.open("json/db.json") { |f| JSON.load(f) } # JSONファイル内のJSONオブジェクトをRubyオブジェクトに変換してhashという変数に入れる
+  @memos = @hash["memos"]
+  @memo_titles = @memos.map{|memo| memo["title"]}
+  @memo_ids = @memos.map{|memo| memo["id"]}
+
   @title = "メモアプリ"
   @content = "たくさんメモしよう！"
   erb :index
@@ -14,7 +19,7 @@ get '/new' do
   erb :new
 end
 
-get '/detail' do
+get '/detail/' do
   @title = "メモ | メモアプリ"
   erb :detail
 end
