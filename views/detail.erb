@@ -1,13 +1,10 @@
-<p>
-【タイトル】：<br/>
-<%= @memo_title %><br/>
-</p>
 
-<p>
-【本文】：<br/>
-<%= @memo_text %><br/>
-</p>
+<% @detail_memos.map do |memo| %>
+<% if memo.has_value?(@path) %>
+    <p>【タイトル】<br/><%= memo["title"] %></p>
+    <p>【本文】<br/><%= memo["body"] %></p>
+<% end %>
+<% end %>
 
-
-<button><a href="/edit">変更</a></button>
-<button>削除</button>
+<button><a href="/edit">編集</a></button>
+<button><a href="/edit">削除</a></button>
