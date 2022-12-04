@@ -1,3 +1,4 @@
+<p>メモの削除</p>
 
 <% @detail_memos.map do |memo| %>
 <% if memo.has_value?(@path) %>
@@ -6,6 +7,9 @@
 <% end %>
 <% end %>
 
-<button><a href="/edit/<%= @path %>">編集</a></button>
-<button><a href="/delete/<%= @path %>">削除</a></button>
+<div><%= @content %></div>
 
+<form method="post" action="/delete/<%= @path %>">
+    <input type="hidden" name="_method" value="delete">
+    <button type="submit">削除</button>
+</form>
