@@ -1,12 +1,9 @@
-<div><%= @content %></div>
 
-<button><a href="/new">メモを追加</a></button>
+<button class="font-semibold text-white absolute top-8 right-10"><a class="bg-indigo-700 block py-2 px-4 rounded" href="/new">メモを追加</a></button>
 
-<br/>
-<br/>
 
-<ul>
+<ul class="block mt-12 pt-4 border-t-2 border-gray-400">
 <% @memo_titles.zip(@memo_ids) do |title, id| %>
-  <li><a href='/detail/<%= id %>'><%= title %></a></li>
+  <li><a class="block mb-4 pb-4 border-b border-gray-400" href='/detail/<%= id %>'><%= title %></a></li>
 <% end %>
 </ul>

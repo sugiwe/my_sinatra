@@ -5,11 +5,12 @@
 <mata charset="utf-8">
 <title><%= @title %></title>
 <link rel="stylesheet" href="/style.css" />
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
-<div class="wrapper">
-<h1><a href="/">メモアプリ</a></h1>
+<div class="wrapper relative">
+<h1 class="mt-4 mb-8 text-4xl font-bold text-indigo-700 text-left"><a href="/">memoo!</a></h1>
 <%= yield %>
 </div>
 </body>
