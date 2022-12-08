@@ -13,6 +13,10 @@ helpers do
   def overwrite_json(file, hash)
     File.open(file, 'w') { |f| JSON.dump(hash, f) }
   end
+
+  def h(text)
+    Rack::Utils.escape_html(text)
+  end
 end
 
 get '/' do
@@ -70,7 +74,7 @@ get '/edit' do
   erb :edit
 end
 
-post '/edit/:id' do
+patch '/edit/:id' do
   @path = params['id']
   @memo_title = params[:memo_title]
   @memo_text = params[:memo_text]
