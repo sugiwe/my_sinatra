@@ -75,8 +75,8 @@ patch '/memos/:id' do
   memos = hash['memos']
   memos.map do |memo|
     if memo.value?(id)
-      memo.store('title', memo_title)
-      memo.store('body', memo_text)
+      memo['title'] = memo_title
+      memo['body'] = memo_text
     end
   end
   overwrite_json('json/db.json', hash)
