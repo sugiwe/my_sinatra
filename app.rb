@@ -20,7 +20,7 @@ helpers do
 end
 
 get '/' do
-  redirect "/memos"
+  redirect '/memos'
 end
 
 get '/memos' do
