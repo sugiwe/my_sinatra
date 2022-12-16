@@ -20,94 +20,86 @@ helpers do
 end
 
 get '/' do
-  @hash = open_json('json/db.json')
-  @memos = @hash['memos']
-  @memo_titles = @memos.map { |memo| memo['title'] }
-  @memo_ids = @memos.map { |memo| memo['id'] }
+  redirect "/memos"
+end
+
+get '/memos' do
+  hash = open_json('json/db.json')
+  @memos = hash['memos']
 
   @title = 'メモアプリ'
   erb :index
 end
 
-get '/new' do
+get '/memos/new' do
   @title = '新規作成 | メモアプリ'
   erb :new
 end
 
-get '/detail/:id' do
+get '/memos/:id' do
   @path = params['id']
-  @detail_hash = open_json('json/db.json')
-  @detail_memos = @detail_hash['memos']
+  detail_hash = open_json('json/db.json')
+  @detail_memos = detail_hash['memos']
 
   @title = 'メモ | メモアプリ'
   erb :detail
 end
 
-get '/detail' do
-  @title = 'メモ | メモアプリ'
-  erb :detail
-end
-
-post '/detail' do
-  @memo_title = params[:memo_title]
-  @memo_text = params[:memo_text]
-  @id = SecureRandom.uuid
+post '/memos' do
+  memo_title = params[:memo_title]
+  memo_text = params[:memo_text]
+  id = SecureRandom.uuid
 
   hash = open_json('json/db.json')
-  hash['memos'] << { 'id' => @id, 'title' => @memo_title, 'body' => @memo_text }
+  hash['memos'] << { 'id' => id, 'title' => memo_title, 'body' => memo_text }
   overwrite_json('json/db.json', hash)
 
-  redirect "/detail/#{@id}"
+  redirect "/memos/#{id}"
 end
 
-get '/edit/:id' do
+get '/memos/:id/edit' do
   @path = params['id']
-  @detail_hash = open_json('json/db.json')
-  @detail_memos = @detail_hash['memos']
+  detail_hash = open_json('json/db.json')
+  @detail_memos = detail_hash['memos']
 
   @title = 'メモの編集 | メモアプリ'
   erb :edit
 end
 
-get '/edit' do
-  @title = 'メモの編集 | メモアプリ'
-  erb :edit
-end
-
-patch '/edit/:id' do
-  @path = params['id']
-  @memo_title = params[:memo_title]
-  @memo_text = params[:memo_text]
+patch '/memos/:id' do
+  id = params['id']
+  memo_title = params[:memo_title]
+  memo_text = params[:memo_text]
 
   hash = open_json('json/db.json')
   memos = hash['memos']
   memos.map do |memo|
-    if memo.value?(@path)
-      memo.store('title', @memo_title)
-      memo.store('body', @memo_text)
+    if memo.value?(id)
+      memo.store('title', memo_title)
+      memo.store('body', memo_text)
     end
   end
   overwrite_json('json/db.json', hash)
 
-  redirect "/detail/#{@path}"
+  redirect "/memos/#{id}"
 end
 
-get '/delete/:id' do
+get '/memos/:id/delete' do
   @path = params['id']
-  @detail_hash = open_json('json/db.json')
-  @detail_memos = @detail_hash['memos']
+  detail_hash = open_json('json/db.json')
+  @detail_memos = detail_hash['memos']
 
   @title = 'メモの削除 | メモアプリ'
   @content = 'このメモを削除しますか？'
   erb :delete
 end
 
-delete '/delete/:id' do
-  @path = params['id']
-  @detail_hash = open_json('json/db.json')
-  @detail_memos = @detail_hash['memos']
-  @detail_memos.delete_if { |memo| memo.value?(@path) }
-  overwrite_json('json/db.json', @detail_hash)
+delete '/memos/:id' do
+  path = params['id']
+  detail_hash = open_json('json/db.json')
+  detail_memos = detail_hash['memos']
+  detail_memos.delete_if { |memo| memo.value?(path) }
+  overwrite_json('json/db.json', detail_hash)
 
-  redirect '/'
+  redirect '/memos'
 end

@@ -15,7 +15,7 @@
 
 <p class="mb-4"><%= @content %></p>
 
-<form method="post" action="/delete/<%= @path %>">
+<form method="post" action="/memos/<%= @path %>">
     <input type="hidden" name="_method" value="delete">
     <button class="bg-indigo-700 font-semibold text-white py-2 px-4 rounded" type="submit">削除</button>
 </form>

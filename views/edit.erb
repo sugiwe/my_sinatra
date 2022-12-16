@@ -2,7 +2,7 @@
 
 <% @detail_memos.map do |memo| %>
 <% if memo.has_value?(@path) %>
-<form method="post" action="/edit/<%= @path %>">
+<form method="post" action="/memos/<%= @path %>">
   <input type="hidden" name="_method" value="patch">
   <input class="w-full mb-4 p-4 shadow-inner" type="text" name="memo_title" value="<%= memo["title"] %>" required><br>
   <textarea class="w-full h-48 mb-4 p-4 shadow-inner" name="memo_text" required><%= memo["body"] %></textarea><br>
