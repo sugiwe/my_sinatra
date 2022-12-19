@@ -1,17 +1,13 @@
 <p class="mb-8">メモの削除</p>
 
-<% @detail_memos.map do |memo| %>
-<% if memo.has_value?(@path) %>
-    <div class="mb-4">
-        <p class="font-semibold mb-2">タイトル</p>
-        <div class="w-full mb-4 p-4 bg-neutral-200"><%= h(memo["title"]) %></div>
-    </div>
-    <div class="mb-16">
-        <p class="font-semibold mb-2">本文</p>
-        <div class="w-full mb-4 p-4 bg-neutral-200"><%= h(memo["body"]).gsub(/\n/, '<br/>') %></div>
-    </div>
-<% end %>
-<% end %>
+<div class="mb-4">
+    <p class="font-semibold mb-2">タイトル</p>
+    <div class="w-full mb-4 p-4 bg-neutral-200"><%= h(@detail_memo["title"]) %></div>
+</div>
+<div class="mb-16">
+    <p class="font-semibold mb-2">本文</p>
+    <div class="w-full mb-4 p-4 bg-neutral-200"><%= h(@detail_memo["body"]).gsub(/\n/, '<br/>') %></div>
+</div>
 
 <p class="mb-4"><%= @content %></p>
 
