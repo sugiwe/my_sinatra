@@ -1,7 +1,7 @@
 <p class="mb-4">メモの変更</p>
 
-<% @detail_memos.map do |memo| %>
-<% if memo.has_value?(@path) %>
+<% @detail_memos.each do |memo| %>
+<% if memo.fetch('id') == @path %>
 <form method="post" action="/memos/<%= @path %>">
   <input type="hidden" name="_method" value="patch">
   <input class="w-full mb-4 p-4 shadow-inner" type="text" name="memo_title" value="<%= memo["title"] %>" required><br>

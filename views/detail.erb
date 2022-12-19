@@ -1,5 +1,5 @@
-<% @detail_memos.map do |memo| %>
-<% if memo.has_value?(@path) %>
+<% @detail_memos.each do |memo| %>
+<% if memo.fetch('id') == @path %>
     <div class="mb-4">
         <p class="font-semibold mb-2">タイトル</p>
         <div class="w-full mb-4 p-4 bg-neutral-200"><%= h(memo["title"]) %></div>

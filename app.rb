@@ -73,8 +73,8 @@ patch '/memos/:id' do
 
   hash = open_json('json/db.json')
   memos = hash['memos']
-  memos.map do |memo|
-    if memo.value?(id)
+  memos.each do |memo|
+    if memo.fetch('id') == id
       memo['title'] = memo_title
       memo['body'] = memo_text
     end
