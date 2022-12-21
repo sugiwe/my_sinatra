@@ -1,0 +1,31 @@
+@charset "UTF-8";
+
+
+@media screen and (min-width: 0px) {
+/* 共通用のスタイル記述 */
+body{
+    background-color: #ccc;
+}
+.wrapper{
+    width: calc(100% - 100px);
+    max-width: 720px;
+    margin: 30px auto;
+    padding: 10px 40px 30px;
+    background-color: #eee;
+}
+
+p {
+    white-space: pre-wrap;
+  }
+
+
+
+}
+
+
+
+
+@media screen and (max-width: 768px) {
+/* スマホ用記述 */
+
+}

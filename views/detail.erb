@@ -1,0 +1,11 @@
+<div class="mb-4">
+    <p class="font-semibold mb-2">タイトル</p>
+    <div class="w-full mb-4 p-4 bg-neutral-200"><%= h(@detail_memo["title"]) %></div>
+</div>
+<div class="mb-16">
+    <p class="font-semibold mb-2">本文</p>
+    <div class="w-full mb-4 p-4 bg-neutral-200"><%= h(@detail_memo["body"]).gsub(/\n/, '<br/>') %></div>
+</div>
+
+<button><a class="bg-indigo-700 font-semibold text-white py-2 px-4 rounded mr-4" href="/memos/<%= @id %>/edit">編集</a></button>
+<button><a class="bg-neutral-500 font-semibold text-white py-2 px-4 rounded" href="/memos/<%= @id %>/delete">削除</a></button>
