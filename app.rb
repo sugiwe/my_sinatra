@@ -37,10 +37,10 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  @path = params['id']
+  @id = params['id']
   detail_hash = open_json('json/db.json')
   detail_memos = detail_hash['memos']
-  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @path }
+  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
 
   @title = 'メモ | メモアプリ'
   erb :detail
@@ -59,10 +59,10 @@ post '/memos' do
 end
 
 get '/memos/:id/edit' do
-  @path = params['id']
+  @id = params['id']
   detail_hash = open_json('json/db.json')
   detail_memos = detail_hash['memos']
-  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @path }
+  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
 
   @title = 'メモの編集 | メモアプリ'
   erb :edit
@@ -87,10 +87,10 @@ patch '/memos/:id' do
 end
 
 get '/memos/:id/delete' do
-  @path = params['id']
+  @id = params['id']
   detail_hash = open_json('json/db.json')
   detail_memos = detail_hash['memos']
-  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @path }
+  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
 
   @title = 'メモの削除 | メモアプリ'
   @content = 'このメモを削除しますか？'
@@ -98,10 +98,10 @@ get '/memos/:id/delete' do
 end
 
 delete '/memos/:id' do
-  path = params['id']
+  id = params['id']
   detail_hash = open_json('json/db.json')
   detail_memos = detail_hash['memos']
-  detail_memos.delete_if { |memo| memo.value?(path) }
+  detail_memos.delete_if { |memo| memo.value?(id) }
   overwrite_json('json/db.json', detail_hash)
 
   redirect '/memos'
