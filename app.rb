@@ -4,14 +4,15 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
 require 'securerandom'
+require 'pg'
 
 helpers do
-  def open_json(file)
-    File.open(file) { |f| JSON.parse(f.read) }
+  def connect_db(file)
+    PG::connect(dbname: file)
   end
 
-  def overwrite_json(file, hash)
-    File.open(file, 'w') { |f| JSON.dump(hash, f) }
+  def open_db(file)
+    connect_db(file).exec( "SELECT * FROM memos" ) 
   end
 
   def h(text)
@@ -24,8 +25,8 @@ get '/' do
 end
 
 get '/memos' do
-  hash = open_json('json/db.json')
-  @memos = hash['memos']
+  rows = open_db("mydb")
+  @memos = rows.map { |row| row }
 
   @title = 'メモアプリ'
   erb :index
@@ -38,8 +39,8 @@ end
 
 get '/memos/:id' do
   @id = params['id']
-  detail_hash = open_json('json/db.json')
-  detail_memos = detail_hash['memos']
+  detail_rows = open_db("mydb")
+  detail_memos = detail_rows.map { |row| row }
   @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
 
   @title = 'メモ | メモアプリ'
@@ -50,18 +51,15 @@ post '/memos' do
   memo_title = params[:memo_title]
   memo_text = params[:memo_text]
   id = SecureRandom.uuid
-
-  hash = open_json('json/db.json')
-  hash['memos'] << { 'id' => id, 'title' => memo_title, 'body' => memo_text }
-  overwrite_json('json/db.json', hash)
+  connect_db("mydb").exec( "INSERT INTO memos VALUES ($1, $2, $3)", [id, memo_title, memo_text] )
 
   redirect "/memos/#{id}"
 end
 
 get '/memos/:id/edit' do
   @id = params['id']
-  detail_hash = open_json('json/db.json')
-  detail_memos = detail_hash['memos']
+  detail_rows = open_db("mydb")
+  detail_memos = detail_rows.map { |row| row }
   @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
 
   @title = 'メモの編集 | メモアプリ'
@@ -72,24 +70,15 @@ patch '/memos/:id' do
   id = params['id']
   memo_title = params[:memo_title]
   memo_text = params[:memo_text]
-
-  hash = open_json('json/db.json')
-  memos = hash['memos']
-  memos.each do |memo|
-    if memo.fetch('id') == id
-      memo['title'] = memo_title
-      memo['body'] = memo_text
-    end
-  end
-  overwrite_json('json/db.json', hash)
+  connect_db("mydb").exec( "UPDATE memos SET title=$1, body=$2 WHERE id=$3", [memo_title, memo_text, id] )
 
   redirect "/memos/#{id}"
 end
 
 get '/memos/:id/delete' do
   @id = params['id']
-  detail_hash = open_json('json/db.json')
-  detail_memos = detail_hash['memos']
+  detail_rows = open_db("mydb")
+  detail_memos = detail_rows.map { |row| row }
   @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
 
   @title = 'メモの削除 | メモアプリ'
@@ -99,10 +88,7 @@ end
 
 delete '/memos/:id' do
   id = params['id']
-  detail_hash = open_json('json/db.json')
-  detail_memos = detail_hash['memos']
-  detail_memos.delete_if { |memo| memo.value?(id) }
-  overwrite_json('json/db.json', detail_hash)
+  connect_db("mydb").exec( "DELETE FROM memos WHERE id='#{id}'" )
 
   redirect '/memos'
 end

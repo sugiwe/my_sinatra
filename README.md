@@ -25,9 +25,49 @@ Ver.2: データがDBに保存されている状態。
 % bundle install
 ```
 
-4. `app.rb`を実行
+4. PostgreSQLを起動
+```
+% brew services start postgresql
+```
+
+5. postgresに接続
+```
+% psql postgre
+```
+
+6. データベースを作成
+```
+% create database mydb;
+```
+
+7. postgresから抜ける
+```
+% \q 
+```
+
+8. 作成したデータベース`mydb`に接続する
+```
+% psql mydb
+```
+
+9. テーブルを作成
+```
+% create table memos(id CHAR(36), title text, body text); 
+```
+
+10. mydbから抜ける
+```
+% \q 
+```
+
+11. PostgreSQLを停止
+```
+% brew services stop postgresql
+```
+
+12. `app.rb`を実行
 ```
 % ruby app.rb
 ```
 
-5. ブラウザで`http://localhost:4567`にアクセスして表示を確認
+13. ブラウザで`http://localhost:4567`にアクセスして表示を確認
