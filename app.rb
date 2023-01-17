@@ -6,13 +6,15 @@ require 'json'
 require 'securerandom'
 require 'pg'
 
+CONNECTION = PG.connect(dbname: 'mydb')
+
 helpers do
-  def connect_db(file)
-    PG::connect(dbname: file)
+  def open_db
+    CONNECTION.exec('SELECT * FROM memos')
   end
 
-  def open_db(file)
-    connect_db(file).exec( "SELECT * FROM memos" ) 
+  def open_row
+    CONNECTION.exec("SELECT * FROM memos WHERE id = '#{@id}'")
   end
 
   def h(text)
@@ -25,8 +27,8 @@ get '/' do
 end
 
 get '/memos' do
-  rows = open_db("mydb")
-  @memos = rows.map { |row| row }
+  rows = open_db
+  @memos = rows.to_a
 
   @title = 'メモアプリ'
   erb :index
@@ -39,9 +41,8 @@ end
 
 get '/memos/:id' do
   @id = params['id']
-  detail_rows = open_db("mydb")
-  detail_memos = detail_rows.map { |row| row }
-  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
+  detail_row = open_row
+  @detail_memo = detail_row.to_a[0]
 
   @title = 'メモ | メモアプリ'
   erb :detail
@@ -51,16 +52,15 @@ post '/memos' do
   memo_title = params[:memo_title]
   memo_text = params[:memo_text]
   id = SecureRandom.uuid
-  connect_db("mydb").exec( "INSERT INTO memos VALUES ($1, $2, $3)", [id, memo_title, memo_text] )
+  CONNECTION.exec('INSERT INTO memos VALUES ($1, $2, $3)', [id, memo_title, memo_text])
 
   redirect "/memos/#{id}"
 end
 
 get '/memos/:id/edit' do
   @id = params['id']
-  detail_rows = open_db("mydb")
-  detail_memos = detail_rows.map { |row| row }
-  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
+  detail_row = open_row
+  @detail_memo = detail_row.to_a[0]
 
   @title = 'メモの編集 | メモアプリ'
   erb :edit
@@ -70,16 +70,15 @@ patch '/memos/:id' do
   id = params['id']
   memo_title = params[:memo_title]
   memo_text = params[:memo_text]
-  connect_db("mydb").exec( "UPDATE memos SET title=$1, body=$2 WHERE id=$3", [memo_title, memo_text, id] )
+  CONNECTION.exec('UPDATE memos SET title=$1, body=$2 WHERE id=$3', [memo_title, memo_text, id])
 
   redirect "/memos/#{id}"
 end
 
 get '/memos/:id/delete' do
   @id = params['id']
-  detail_rows = open_db("mydb")
-  detail_memos = detail_rows.map { |row| row }
-  @detail_memo = detail_memos.find { |memo| memo.fetch('id') == @id }
+  detail_row = open_row
+  @detail_memo = detail_row.to_a[0]
 
   @title = 'メモの削除 | メモアプリ'
   @content = 'このメモを削除しますか？'
@@ -88,7 +87,7 @@ end
 
 delete '/memos/:id' do
   id = params['id']
-  connect_db("mydb").exec( "DELETE FROM memos WHERE id='#{id}'" )
+  CONNECTION.exec('DELETE FROM memos WHERE id=$1', [id])
 
   redirect '/memos'
 end

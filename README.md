@@ -32,7 +32,7 @@ Ver.2: データがDBに保存されている状態。
 
 5. postgresに接続
 ```
-% psql postgre
+% psql postgres
 ```
 
 6. データベースを作成
@@ -67,7 +67,7 @@ Ver.2: データがDBに保存されている状態。
 
 12. `app.rb`を実行
 ```
-% ruby app.rb
+% bundle exec ruby app.rb
 ```
 
 13. ブラウザで`http://localhost:4567`にアクセスして表示を確認
